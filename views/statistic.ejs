@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <title>Short URL Service Statistic</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="/style.css" />
+    </head>
+    <body>
+        <div class="container">
+            <h3 class="text-center mt-5">Short URL Service Statistic</h3>
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-8 mt-4">
+                    <% if(typeof error != "undefined"){%>
+                    <div class="alert alert-danger"><%= msg %></div>
+                    <% }else if(typeof urlCode != "undefined"){ %>
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-success">
+                            <tr>
+                                <th class="text-center" colspan="2"><h5>Short URL Information</h5></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><b>Original URL</b></td>
+                                <td><a href="<%= urlData.longUrl %>" target="_balnk"><%= urlData.longUrl %></a></td>
+                            </tr>
+                            <tr>
+                                <td><b>Short URL</b></td>
+                                <td><a href="<%= urlData.shortUrl %>" target="_balnk"><%= urlData.shortUrl %></a></td>
+                            </tr>
+                            <tr>
+                                <td><b>Validate Date</b></td>
+                                <td><%= moment(urlData.validityAt).format('MMMM Do YYYY, h:mm:ss a') %></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr />
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-success">
+                            <tr>
+                                <th class="text-center" colspan="2"><h5>"<%= urlCode %>" Statistic Info</h5></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-warning">
+                                <td><b>Total View</b></td>
+                                <td class="text-center"><%= data.length %></td>
+                            </tr>
+                            <% for (var key in viewList ) { %>
+                            <tr>
+                                <td class="capitalize"><b><%- key %></b></td>
+                                <td class="text-center"><%- viewList[key] %></td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+
+                    <div id="statisticMapdiv"></div>
+
+                    <div class="accordion mt-5 mb-5" id="viewListAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    View List (<%= data.length %>)
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#viewListAccordion">
+                                <div class="accordion-body">
+                                    <% for (var key in data ) { %>
+                                    <table class="table table-bordered table-striped">
+                                        <tr>
+                                            <td><b>Country</b></td>
+                                            <td><%= data[key].country %></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>City</b></td>
+                                            <td><%= data[key].city %></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Device</b></td>
+                                            <td class="capitalize"><%= data[key].device %></td>
+                                        </tr>
+                                    </table>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/2.13.1/OpenLayers.js"></script>
+                    <script>
+                        map = new OpenLayers.Map('statisticMapdiv');
+                        map.addLayer(new OpenLayers.Layer.OSM());
+                        var zoom = 7;
+                        var newBound = new OpenLayers.Bounds();
+
+                        let markerList = JSON.parse('<%= markerList %>');
+                        let minLat = false;
+                        let minLong = false;
+                        for (let index = 0; index < markerList.length; index++) {
+                            let markers = new OpenLayers.Layer.Markers('Markers');
+                            const element = markerList[index];
+                            let position = new OpenLayers.LonLat(element[1], element[0]).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject());
+                            newBound.extend(position);
+
+                            map.addLayer(markers);
+                            markers.addMarker(new OpenLayers.Marker(position));
+
+                            if (!minLat || minLat > element[1]) {
+                                minLat = element[1];
+                            }
+
+                            if (!minLong || minLong < element[0]) {
+                                minLong = element[0];
+                            }
+                        }
+
+                        let lonLat = new OpenLayers.LonLat(minLat, minLong).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject());
+                        map.setCenter(lonLat, zoom);
+                        map.zoomToExtent(newBound);
+                    </script>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-6"><a href="https://github.com/gokhanozgezer" target="_new">Gokhan Ozgezer</a></div>
+                    <div class="col-6 text-sm-end">Short URL Service Script v1</div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "name": "shorturl",
+  "version": "1.0.0",
+  "description": "URL shortener script packed with many unique features. It allows you to shorten a long link into short smart link.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "server": "nodemon index.js --ignore tests"
+  },
+  "author": "Gokhan Ozgezer <gokhanozgezer@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "config": "^3.3.3",
+    "cron": "^1.7.1",
+    "ejs": "^2.6.2",
+    "express": "^4.15.3",
+    "express-device": "^0.4.2",
+    "express-ip": "^1.0.4",
+    "geoip-lite": "^1.4.2",
+    "lodash": "^4.17.20",
+    "moment": "^2.29.1",
+    "mongoose": "^5.11.8",
+    "nodemon": "^1.18.4",
+    "path-parser": "^2.0.2",
+    "randomstring": "^1.1.5",
+    "shortid": "^2.2.8",
+    "uuid": "^3.2.1",
+    "valid-url": "^1.0.9"
+  }
+}

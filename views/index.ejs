@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <title>Short URL Service</title>
+        <link href="//cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="/style.css" />
+    </head>
+    <body>
+        <div class="container">
+            <h3 class="text-center mt-5">Short URL Service</h3>
+            <form action="/" method="post" autocomplete="off">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-lg-8">
+                        <div class="input-group mt-3">
+                            <span class="input-group-text">
+                                <img src="/link.svg" />
+                            </span>
+                            <input class="form-control form-control-lg" type="text" placeholder="" name="url" />
+                            <button class="btn btn-success">Short URL</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-8 mt-4">
+                    <% if(typeof error != "undefined"){%>
+                    <div class="alert alert-danger"><%= msg %></div>
+                    <% }else if(typeof urlCode != "undefined"){ %>
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-success">
+                            <tr>
+                                <th class="text-center" colspan="2"><h5>Short URL Information</h5></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><b>Original URL</b></td>
+                                <td><a href="<%= longUrl %>" target="_blank"><%= longUrl %></a></td>
+                            </tr>
+                            <tr>
+                                <td><b>Short URL</b></td>
+                                <td><a href="<%= shortUrl %>" target="_blank"><%= shortUrl %></a></td>
+                            </tr>
+                            <tr>
+                                <td><b>Validate Date</b></td>
+                                <td><%= moment(validityAt).format('MMMM Do YYYY, h:mm:ss a') %></td>
+                            </tr>
+                            <tr>
+                                <td><b>URL Statistic</b></td>
+                                <td><a href="<%= domain %>/statistic/<%= urlCode %>" target="_blank"><%= domain %>/statistic/<%= urlCode %></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <% if(typeof ipInfo.country != "undefined"){%>
+                    <hr />
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-success">
+                            <tr>
+                                <th class="text-center" colspan="2"><h5>Your GEO Information</h5></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><b>IP</b></td>
+                                <td><%= ipInfo.ip %></td>
+                            </tr>
+                            <tr>
+                                <td><b>Country</b></td>
+                                <td><%= ipInfo.country %></td>
+                            </tr>
+                            <tr>
+                                <td><b>City</b></td>
+                                <td><%= ipInfo.city %></td>
+                            </tr>
+                            <tr>
+                                <td><b>Device</b></td>
+                                <td class="capitalize"><%= device %></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><div id="mapdiv" data-lat="<%= ipInfo.ll[1] %>" data-long="<%= ipInfo.ll[0] %>"></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/2.13.1/OpenLayers.js"></script>
+                    <script>
+                        const mapDiv = document.querySelector('#mapdiv');
+                        map = new OpenLayers.Map('mapdiv');
+                        map.addLayer(new OpenLayers.Layer.OSM());
+
+                        var lonLat = new OpenLayers.LonLat(mapDiv.dataset.lat, mapDiv.dataset.long).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject());
+
+                        var zoom = 13;
+
+                        var markers = new OpenLayers.Layer.Markers('Markers');
+                        map.addLayer(markers);
+
+                        markers.addMarker(new OpenLayers.Marker(lonLat));
+
+                        map.setCenter(lonLat, zoom);
+                    </script>
+                    <% } %> <% } %>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-6"><a href="https://github.com/gokhanozgezer" target="_new">Gokhan Ozgezer</a></div>
+                    <div class="col-6 text-sm-end">Short URL Service Script v1</div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
