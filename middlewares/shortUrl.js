@@ -49,9 +49,9 @@ module.exports = {
         }
     },
     statistic: async function (urlCode) {
-        const urlData = await UrlShorten.findOne({ urlCode: urlCode });
+        const urlData = await UrlShorten.findOne({ urlCode: urlCode }, { _id: false, __v: false });
         if (urlData) {
-            const item = await Statistics.find({ urlCode: urlCode }, { _id: false, __v: false });
+            const item = await Statistics.find({ urlCode: urlCode }, { _id: false, __v: false, urlCode: false });
             if (item.length > 0) {
                 let markerList = item.map((v) => {
                     return v.latlong;
