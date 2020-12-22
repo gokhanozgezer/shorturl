@@ -21,7 +21,12 @@ module.exports = {
         try {
             const item = await UrlShorten.findOne({ longUrl: longUrl, validityAt: { $gt: today } }, { _id: false, longUrl: true, shortUrl: true, urlCode: true, validityAt: true });
             if (item) {
-                return item;
+                return {
+                    longUrl: item.longUrl,
+                    shortUrl: item.shortUrl,
+                    urlCode: item.urlCode,
+                    validityAt: item.validityAt,
+                };
             } else {
                 shortUrl = shortBaseUrl + '/' + urlCode;
                 const item = new UrlShorten({

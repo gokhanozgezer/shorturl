@@ -1,9 +1,7 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
-const moment = require('moment');
 const config = require('config');
 const shortUrl = require('../middlewares/shortUrl');
-const domain = config.get('shortDomain');
 const ApiKey = config.get('apiKey');
 
 router.all('*', async (req, res, next) => {
@@ -22,8 +20,6 @@ router.post('/', async (req, res) => {
     if (response.error != undefined) {
         return res.status(401).json(response);
     } else {
-        response['moment'] = moment;
-        response['domain'] = domain;
         response['ipInfo'] = req.ipInfo;
         response['device'] = req.device.type;
 

@@ -25,7 +25,7 @@ router.get('/statistic/:code', async (req, res) => {
     res.status(statusCode).render(renderPage, response);
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', async (req, res) => {
     const { longUrl } = req.body;
     let response = await shortUrl.create(longUrl);
 
