@@ -86,7 +86,7 @@ Apache için conf dosyasına aşağıda bulunan mod_proxy leri eklemeniz gerekiy
 `LoadModule proxy_http_module modules/mod_proxy_http.so`
 
 ## Demo Link
-[Demo](https://shorturl.kodhouse.co/) buradan inceleyebilirsiniz.
+[Demo](https://shorturl.kodhouse.net/) buradan inceleyebilirsiniz.
 
 ## API Kullanim
 ### Kısa URL Oluşturma
@@ -277,7 +277,7 @@ You must add mod_proxy for Apache conf file;
 `LoadModule proxy_http_module modules/mod_proxy_http.so`
 
 ## Demo
-See the [Demo](https://shorturl.kodhouse.co/)
+See the [Demo](https://shorturl.kodhouse.net/)
 
 ## API
 ### Create Short URL
